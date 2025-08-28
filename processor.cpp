@@ -154,7 +154,7 @@ namespace MyCompanyName {
 					{
 						int32 pitch = event.noteOn.pitch;
 						//osc1.setFrequency(freqTable[pitch]); //old
-						voice1.NoteOn(pitch); //new
+						voices[0].NoteOn(pitch); //new
 						OutputDebugStringA(("NoteOn received - noteId = " + std::to_string(pitch) + "\n").c_str());
 
 						break;
@@ -169,7 +169,7 @@ namespace MyCompanyName {
 	//outputs[0][i] = 0;
 						int32 pitch = event.noteOn.pitch;
 						//osc1.setFrequency(0); //old
-						voice1.NoteOff(); //new
+						voices[0].NoteOff(); //new
 						OutputDebugStringA(("NoteOn received - noteId = " + std::to_string(pitch) + "\n").c_str());
 						break;
 					}
@@ -192,7 +192,7 @@ namespace MyCompanyName {
 				//float sample = osc1.process();
 				//outputs[0][i] = sample*0.5;   // left
 				////	//outputs[1][i] = sample;   // right
-				float sample = voice1.GetSample();
+				float sample = voices[0].GetSample();
 				outputs[0][i] = sample;
 			}
 		}

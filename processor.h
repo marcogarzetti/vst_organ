@@ -25,7 +25,7 @@ namespace MyCompanyName {
 	public:
 		static float freqTable[128]; //old
 		static Oscillator osc1; //old
-		Voice voice1;
+		Voice voices[8];
 
 		//declare parameters
 	public:
