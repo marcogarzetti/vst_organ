@@ -154,7 +154,18 @@ namespace MyCompanyName {
 					{
 						int32 pitch = event.noteOn.pitch;
 						//osc1.setFrequency(freqTable[pitch]); //old
-						voices[0].NoteOn(pitch); //new
+
+						int freeVoice = GetFirstAvailableVoice();
+						OutputDebugStringA(("First available voice: " + std::to_string(freeVoice) + "\n").c_str());
+
+						//assign the free voice to the note
+						notes[pitch] = freeVoice;
+
+						//get the voice assigned to the note
+						int assignedVoice = notes[pitch];
+
+						//voice on
+						voices[assignedVoice].NoteOn(pitch); //new
 						OutputDebugStringA(("NoteOn received - noteId = " + std::to_string(pitch) + "\n").c_str());
 
 						break;
@@ -169,7 +180,12 @@ namespace MyCompanyName {
 	//outputs[0][i] = 0;
 						int32 pitch = event.noteOn.pitch;
 						//osc1.setFrequency(0); //old
-						voices[0].NoteOff(); //new
+
+						//get the voice assigned to the note
+						int assignedVoice = notes[pitch];
+
+							//voice off
+						voices[assignedVoice].NoteOff(); //new
 						OutputDebugStringA(("NoteOn received - noteId = " + std::to_string(pitch) + "\n").c_str());
 						break;
 					}
@@ -192,12 +208,26 @@ namespace MyCompanyName {
 				//float sample = osc1.process();
 				//outputs[0][i] = sample*0.5;   // left
 				////	//outputs[1][i] = sample;   // right
-				float sample = voices[0].GetSample();
-				outputs[0][i] = sample;
+				float sample = 0;
+				
+				//sum the samples of the voices
+				for (int i = 0; i < 8; i++) {
+					sample += voices[i].GetSample();
+				}
+				outputs[0][i] = sample * 0.2;
 			}
 		}
 
 		return kResultOk;
+	}
+
+	int vst_organProcessor::GetFirstAvailableVoice() {
+		for (int i = 0; i < 8; i++) {
+			if (!voices[i].active) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	//------------------------------------------------------------------------

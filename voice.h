@@ -33,7 +33,7 @@ public:
 		//osc9.setSampleRate(44100);
 	}
 
-private:
+public:
 	bool active = false;
 	int noteNumber = -1;
 

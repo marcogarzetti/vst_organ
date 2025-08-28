@@ -26,10 +26,13 @@ namespace MyCompanyName {
 		static float freqTable[128]; //old
 		static Oscillator osc1; //old
 		Voice voices[8];
+		float notes[128];
 
 		//declare parameters
 	public:
 		Steinberg::Vst::ParamValue mGain = 1.;
+
+		int GetFirstAvailableVoice();
 
 		static void CreateFrequencyTable();
 
