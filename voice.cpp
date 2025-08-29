@@ -57,5 +57,9 @@ float Voice::GetSample() {
 	//	osc7.process() +
 	//	osc8.process() +
 	//	osc9.process()) * 0.1;
-	return sample * 0.1f;
+
+	  // normalize based on number of oscillators
+		sample /= static_cast<float>(9);
+	
+	return sample;
 }

@@ -15,6 +15,7 @@
 #include "voice.h"
 
 
+
 //#include "oscillator.h"
 
 using namespace Steinberg;
@@ -124,6 +125,7 @@ namespace MyCompanyName {
 					case GainParams::kParamGainId:
 						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue)
 							mGain = value * 10;
+						OutputDebugStringA(("Parameter changed " + std::to_string(value) + "\n").c_str());
 						break;
 					}
 				}
@@ -211,7 +213,7 @@ namespace MyCompanyName {
 				float sample = 0;
 				
 				//sum the samples of the voices
-				for (int i = 0; i < 8; i++) {
+				for (int i = 0; i < MAX_VOICES; i++) {
 					sample += voices[i].GetSample();
 				}
 				outputs[0][i] = sample * 0.2;
@@ -222,7 +224,7 @@ namespace MyCompanyName {
 	}
 
 	int vst_organProcessor::GetFirstAvailableVoice() {
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < MAX_VOICES; i++) {
 			if (!voices[i].active) {
 				return i;
 			}

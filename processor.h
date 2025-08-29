@@ -10,6 +10,8 @@
 #include "oscillator.h"
 #include "voice.h"
 
+static constexpr int MAX_VOICES = 8;
+
 namespace MyCompanyName {
 
 	//------------------------------------------------------------------------
@@ -25,7 +27,7 @@ namespace MyCompanyName {
 	public:
 		static float freqTable[128]; //old
 		static Oscillator osc1; //old
-		Voice voices[8];
+		Voice voices[MAX_VOICES];
 		float notes[128];
 
 		//declare parameters
