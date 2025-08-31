@@ -43,7 +43,7 @@ float Voice::GetSample() {
 
 	float sample = 0;
 	for (int i = 0; i < 9; i++) {
-		sample += oscillators[i].process();
+		sample += (oscillators[i].process() * levels[i]); //each oscillator has a different level
 	}
 	//call osc.process and compute resulting sample to be returned
 	if (!active) return 0.0f; //note off

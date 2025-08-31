@@ -81,6 +81,7 @@ namespace MyCompanyName {
 		//CreateFrequencyTable(); //old
 		CreateFrequencyTables(); //new
 
+
 		return kResultOk;
 	}
 
@@ -120,17 +121,104 @@ namespace MyCompanyName {
 					Vst::ParamValue value;
 					int32 sampleOffset;
 					int32 numPoints = paramQueue->getPointCount();
+
+
 					switch (paramQueue->getParameterId())
 					{
+						//gain
 					case GainParams::kParamGainId:
-						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue)
+						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
 							mGain = value * 10;
-						OutputDebugStringA(("Parameter changed " + std::to_string(value) + "\n").c_str());
+
+							//master gain
+						}
+						break;
+					case GainParams::kParamOsc1Id:
+						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
+
+							//set the level of oscillator 1 for all the voices
+							for (int i = 0; i < MAX_VOICES; i++) {
+								voices[i].levels[0] = value;
+							}
+						}
+						break;
+					case GainParams::kParamOsc2Id:
+						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
+
+							//set the level of oscillator 2 for all the voices
+							for (int i = 0; i < MAX_VOICES; i++) {
+								voices[i].levels[1] = value;
+							}
+						}
+						break;
+					case GainParams::kParamOsc3Id:
+						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
+
+							//set the level of oscillator 2 for all the voices
+							for (int i = 0; i < MAX_VOICES; i++) {
+								voices[i].levels[2] = value;
+							}
+						}
+						break;
+					case GainParams::kParamOsc4Id:
+						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
+
+							//set the level of oscillator 2 for all the voices
+							for (int i = 0; i < MAX_VOICES; i++) {
+								voices[i].levels[3] = value;
+							}
+						}
+						break;
+					case GainParams::kParamOsc5Id:
+						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
+
+							//set the level of oscillator 2 for all the voices
+							for (int i = 0; i < MAX_VOICES; i++) {
+								voices[i].levels[4] = value;
+							}
+						}
+						break;
+					case GainParams::kParamOsc6Id:
+						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
+
+							//set the level of oscillator 2 for all the voices
+							for (int i = 0; i < MAX_VOICES; i++) {
+								voices[i].levels[5] = value;
+							}
+						}
+						break;
+					case GainParams::kParamOsc7Id:
+						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
+
+							//set the level of oscillator 2 for all the voices
+							for (int i = 0; i < MAX_VOICES; i++) {
+								voices[i].levels[6] = value;
+							}
+						}
+						break;
+					case GainParams::kParamOsc8Id:
+						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
+
+							//set the level of oscillator 2 for all the voices
+							for (int i = 0; i < MAX_VOICES; i++) {
+								voices[i].levels[7] = value;
+							}
+						}
+						break;
+					case GainParams::kParamOsc9Id:
+						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
+
+							//set the level of oscillator 2 for all the voices
+							for (int i = 0; i < MAX_VOICES; i++) {
+								voices[i].levels[8] = value;
+							}
+						}
 						break;
 					}
 				}
 			}
 		}
+
 		// ....
 
 		//---Second: Read input events-------------
@@ -186,7 +274,7 @@ namespace MyCompanyName {
 						//get the voice assigned to the note
 						int assignedVoice = notes[pitch];
 
-							//voice off
+						//voice off
 						voices[assignedVoice].NoteOff(); //new
 						OutputDebugStringA(("NoteOn received - noteId = " + std::to_string(pitch) + "\n").c_str());
 						break;
@@ -211,7 +299,7 @@ namespace MyCompanyName {
 				//outputs[0][i] = sample*0.5;   // left
 				////	//outputs[1][i] = sample;   // right
 				float sample = 0;
-				
+
 				//sum the samples of the voices
 				for (int i = 0; i < MAX_VOICES; i++) {
 					sample += voices[i].GetSample();

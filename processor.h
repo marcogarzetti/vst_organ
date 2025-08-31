@@ -36,7 +36,7 @@ namespace MyCompanyName {
 
 		int GetFirstAvailableVoice();
 
-		static void CreateFrequencyTable();
+		//static void CreateFrequencyTable();
 
 		// Create function
 		static Steinberg::FUnknown* createInstance(void* /*context*/)

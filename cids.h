@@ -17,7 +17,18 @@ static const Steinberg::FUID kvst_organControllerUID (0x75F6A637, 0x1C6B5B69, 0x
 //define parameters
 enum GainParams : Steinberg::Vst::ParamID
 {
-    kParamGainId = 102, // should be a unique id...
+    kParamGainId = 100, // should be a unique id...
+
+    kParamOsc1Id = 101,
+    kParamOsc2Id = 102,
+    kParamOsc3Id = 103,
+    kParamOsc4Id = 104,
+    kParamOsc5Id = 105,
+    kParamOsc6Id = 106,
+    kParamOsc7Id = 107,
+    kParamOsc8Id = 108,
+    kParamOsc9Id = 109,
+
 };
 //------------------------------------------------------------------------
 } // namespace MyCompanyName
