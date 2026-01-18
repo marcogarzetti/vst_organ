@@ -10,4 +10,4 @@ extern float freqTable7[128];
 extern float freqTable8[128];
 extern float freqTable9[128];
 
- void CreateFrequencyTables();
+void CreateFrequencyTables();

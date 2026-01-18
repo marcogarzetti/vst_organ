@@ -128,7 +128,7 @@ namespace MyCompanyName {
 						//gain
 					case GainParams::kParamGainId:
 						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
-							mGain = value * 10;
+							mGain = value;
 
 							//master gain
 						}
@@ -304,7 +304,8 @@ namespace MyCompanyName {
 				for (int i = 0; i < MAX_VOICES; i++) {
 					sample += voices[i].GetSample();
 				}
-				outputs[0][i] = sample * 0.2;
+				outputs[0][i] = sample* mGain; // left
+				outputs[1][i] = sample* mGain; // right
 			}
 		}
 

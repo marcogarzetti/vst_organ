@@ -43,6 +43,7 @@ namespace MyCompanyName {
 
 		//read default parameters
 
+		//voices
 	//for each voice
 		//for (int v = 0; v < MAX_VOICES; v++) {
 
