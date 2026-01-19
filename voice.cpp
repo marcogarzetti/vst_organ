@@ -8,8 +8,17 @@
 void Voice::NoteOn(int midiNoteNumber) {
 	noteNumber = midiNoteNumber;
 	active = true;
+
+	// reset phase
+    for (int i = 0; i < 9; i++)
+        oscillators[i].reset();
+
 	OutputDebugStringA(("Voice 1 set pitch" + std::to_string(midiNoteNumber) + "\n").c_str());
 
+	//envelope smoothing to avoid click
+	env = 0.0f;
+	envTarget = 1.0f;
+	envStep = 1.0f / (0.005f * 44100); // 5 ms attack
 
 	oscillators[0].setFrequency(freqTable1[midiNoteNumber]);
 	oscillators[1].setFrequency(freqTable2[midiNoteNumber]);
@@ -32,9 +41,12 @@ void Voice::NoteOn(int midiNoteNumber) {
 }
 
 void Voice::NoteOff() {
-	active = false;
+	//active = false;
 	noteNumber = -1;
 
+	//envelope smoothing to avoid clicks
+	envTarget = 0.0f;
+	envStep = 1.0f / (0.02f * 44100); // 20 ms release
 }
 
 float Voice::GetSample() {
@@ -58,8 +70,30 @@ float Voice::GetSample() {
 	//	osc8.process() +
 	//	osc9.process()) * 0.1;
 
-	  // normalize based on number of oscillators
+	  // normalize level based on number of oscillators
 		sample /= static_cast<float>(9);
 	
-	return sample;
+		// envelope smoothing
+		if (env < envTarget)
+		{
+			env += envStep;
+			if (env > envTarget) env = envTarget;
+		}
+		else if (env > envTarget)
+		{
+			env -= envStep;
+			if (env < envTarget) env = envTarget;
+		}
+
+		sample *= env;
+
+		//deactivate voice only when level reached 0
+		if (env <= 0.00001f)
+		{
+			active = false;
+			noteNumber = -1;
+			return 0.0f;
+		}
+
+		return sample;
 }

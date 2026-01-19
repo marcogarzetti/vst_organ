@@ -13,7 +13,7 @@ class Oscillator {
 public:
 	void setSampleRate(double sr);
 	void setFrequency(double freq);
-
+    void reset(); //reset phase
 	float process();
 
 private:

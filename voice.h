@@ -20,11 +20,15 @@ public:
 	bool active = false;
 	int noteNumber = -1;
 
-
 public:
 	void NoteOn(int noteNumber);
 	void NoteOff();
 	float GetSample();
+
+	//for envelope smoothing (avoid clicks)
+	float env = 0.0f;
+	float envTarget = 0.0f;
+	float envStep = 0.0f;
 };
 
 

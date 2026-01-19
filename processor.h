@@ -25,8 +25,6 @@ namespace MyCompanyName {
 
 		//declare frequency tables and oscillators
 	public:
-		static float freqTable[128]; //old
-		static Oscillator osc1; //old
 		Voice voices[MAX_VOICES];
 		float notes[128];
 

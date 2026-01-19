@@ -17,6 +17,11 @@
 		frequency = freq; increment = (2.0 * PI * frequency) / sampleRate;
 	}
 
+	void Oscillator::reset() {
+		//reset phase
+		phase = 0.0;
+	}
+
 	float Oscillator::process() {
 		phase += increment;
 		if (phase >= 2.0 * PI) phase -= 2.0 * PI; //at the end of the cycle, reset phase and restart
