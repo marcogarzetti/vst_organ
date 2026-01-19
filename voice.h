@@ -6,12 +6,13 @@ class Voice {
 public: 
 	Oscillator oscillators[9];
 	float levels[9];
+	double sampleRate;
 
 public:
 	Voice() {
 		//default constructor
 		for (int i = 0; i < 9; i++) {
-			oscillators[i].setSampleRate(44100);
+			//oscillators[i].setSampleRate(44100);
 			levels[i] = 0;
 		}
 	}
@@ -19,11 +20,13 @@ public:
 public:
 	bool active = false;
 	int noteNumber = -1;
+	double voiceSampleRate;
 
 public:
 	void NoteOn(int noteNumber);
 	void NoteOff();
 	float GetSample();
+	void SetSampleRate(double sampleRate);
 
 	//for envelope smoothing (avoid clicks)
 	float env = 0.0f;

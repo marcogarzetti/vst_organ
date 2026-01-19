@@ -324,6 +324,10 @@ namespace MyCompanyName {
 	//------------------------------------------------------------------------
 	tresult PLUGIN_API vst_organProcessor::setupProcessing(Vst::ProcessSetup& newSetup)
 	{
+		//get sample frequency from host and set voices sample rate. If the sample rate is changed in the host this cycle will be executed to set the new sample rate for the voices
+		for (int i = 0; i < MAX_VOICES; i++) {
+			voices[i].SetSampleRate(newSetup.sampleRate);
+		}
 		//--- called before any processing ----
 		return AudioEffect::setupProcessing(newSetup);
 	}
