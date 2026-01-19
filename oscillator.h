@@ -17,7 +17,7 @@ public:
 	float process();
 
 private:
-    double sampleRate; // = 44100.0;   // default
+    double sampleRate = 0; // = 44100.0;   // default
     double frequency = 440.0;      // default (A4)
     double phase = 0.0;
     double increment = (2.0 * PI * frequency) / sampleRate;

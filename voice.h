@@ -6,7 +6,6 @@ class Voice {
 public: 
 	Oscillator oscillators[9];
 	float levels[9];
-	double sampleRate;
 
 public:
 	Voice() {
@@ -20,7 +19,7 @@ public:
 public:
 	bool active = false;
 	int noteNumber = -1;
-	double voiceSampleRate;
+	double voiceSampleRate = 0;
 
 public:
 	void NoteOn(int noteNumber);
