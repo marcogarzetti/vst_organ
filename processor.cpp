@@ -20,27 +20,10 @@
 
 using namespace Steinberg;
 
-namespace MyCompanyName {
+namespace OrganPlugin {
 	//------------------------------------------------------------------------
 	// vst_organProcessor
 	//------------------------------------------------------------------------
-
-	//Oscillator osc1;
-	//float freqTable[128];
-	//float vst_organProcessor::freqTable[128];
-	//Oscillator vst_organProcessor::osc1;
-
-	//void vst_organProcessor::CreateFrequencyTable()
-	//{
-	//	float c0 = 16.35;
-	//	float k = 1.059463094359;
-
-	//	for (int i = 0;i < 128;i++)
-	//	{
-	//		vst_organProcessor::freqTable[i] = c0;
-	//		c0 *= k;
-	//	}
-	//}
 
 	vst_organProcessor::vst_organProcessor()
 	{
@@ -80,7 +63,6 @@ namespace MyCompanyName {
 
 		//CreateFrequencyTable(); //old
 		CreateFrequencyTables(); //new
-
 
 		return kResultOk;
 	}
@@ -133,6 +115,8 @@ namespace MyCompanyName {
 							//master gain
 						}
 						break;
+
+						//gains for harmonics (oscillators) of the voices
 					case GainParams::kParamOsc1Id:
 						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
 
@@ -219,8 +203,6 @@ namespace MyCompanyName {
 			}
 		}
 
-		// ....
-
 		//---Second: Read input events-------------
 		// get the list of all event changes
 		Vst::IEventList* eventList = data.inputEvents;
@@ -243,7 +225,6 @@ namespace MyCompanyName {
 						//mGainReduction = event.noteOn.velocity; // value between 0 and 1
 					{
 						int32 pitch = event.noteOn.pitch;
-						//osc1.setFrequency(freqTable[pitch]); //old
 
 						int freeVoice = GetFirstAvailableVoice();
 						OutputDebugStringA(("First available voice: " + std::to_string(freeVoice) + "\n").c_str());
@@ -265,11 +246,7 @@ namespace MyCompanyName {
 					//----------------------
 					case Vst::Event::kNoteOffEvent:
 					{
-						// noteOff reset the gain modifier
-	//mGainReduction = 0.f;
-	//outputs[0][i] = 0;
 						int32 pitch = event.noteOn.pitch;
-						//osc1.setFrequency(0); //old
 
 						//get the voice assigned to the note
 						int assignedVoice = notes[pitch];
@@ -279,12 +256,10 @@ namespace MyCompanyName {
 						OutputDebugStringA(("NoteOn received - noteId = " + std::to_string(pitch) + "\n").c_str());
 						break;
 					}
-
 					}
 				}
 			}
 		}
-
 
 		//--- Here you have to implement your processing
 		//oscillator 1 play
@@ -295,17 +270,14 @@ namespace MyCompanyName {
 
 			//output oscillator samples
 			for (int i = 0; i < numSamples; i++) {
-				//float sample = osc1.process();
-				//outputs[0][i] = sample*0.5;   // left
-				////	//outputs[1][i] = sample;   // right
 				float sample = 0;
 
 				//sum the samples of the voices
 				for (int i = 0; i < MAX_VOICES; i++) {
 					sample += voices[i].GetSample();
 				}
-				outputs[0][i] = sample* mGain; // left
-				outputs[1][i] = sample* mGain; // right
+				outputs[0][i] = sample * mGain; // left
+				outputs[1][i] = sample * mGain; // right
 			}
 		}
 
@@ -366,6 +338,4 @@ namespace MyCompanyName {
 
 	//------------------------------------------------------------------------
 
-
-
-} // namespace MyCompanyName
+} // namespace OrganPlugin

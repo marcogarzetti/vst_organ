@@ -10,7 +10,7 @@
 
 using namespace Steinberg;
 
-namespace MyCompanyName {
+namespace OrganPlugin {
 
 	//------------------------------------------------------------------------
 	// vst_organController Implementation
@@ -104,4 +104,4 @@ namespace MyCompanyName {
 	}
 
 	//------------------------------------------------------------------------
-} // namespace MyCompanyName
+} // namespace OrganPlugin

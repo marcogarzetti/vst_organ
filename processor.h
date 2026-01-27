@@ -10,9 +10,9 @@
 #include "oscillator.h"
 #include "voice.h"
 
-static constexpr int MAX_VOICES = 8;
+static constexpr int MAX_VOICES = 8; //max number of allowed voices
 
-namespace MyCompanyName {
+namespace OrganPlugin {
 
 	//------------------------------------------------------------------------
 	//  vst_organProcessor
@@ -32,9 +32,8 @@ namespace MyCompanyName {
 	public:
 		Steinberg::Vst::ParamValue mGain = 1.;
 
+		//method to return the first free usable voice
 		int GetFirstAvailableVoice();
-
-		//static void CreateFrequencyTable();
 
 		// Create function
 		static Steinberg::FUnknown* createInstance(void* /*context*/)
@@ -72,4 +71,4 @@ namespace MyCompanyName {
 	};
 
 	//------------------------------------------------------------------------
-} // namespace MyCompanyName
+} // namespace OrganPlugin
