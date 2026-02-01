@@ -34,7 +34,7 @@ namespace OrganPlugin {
 
 	void Voice::NoteOff() {
 		//active = false;
-		noteNumber = -1;
+		//noteNumber = -1;
 
 		//envelope smoothing to avoid clicks
 		envTarget = 0.0f;

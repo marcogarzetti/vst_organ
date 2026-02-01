@@ -16,7 +16,13 @@
 
 
 
-//#include "oscillator.h"
+//| Situation		 | How you receive parameters              |
+//| -------------- - | -------------------------------------- -|
+//| User moves knob  | `process()` via `inputParameterChanges` |
+//| Plugin loads	 | **`setState()`**						   |
+//| Preset loads	 | **`setState()`**						   |
+//| Project reopens  | **`setState()`**						   |
+
 
 using namespace Steinberg;
 
@@ -61,8 +67,31 @@ namespace OrganPlugin {
 		/* If you don't need an event bus, you can remove the next line */
 		addEventInput(STR16("Event In"), 1);
 
-		//CreateFrequencyTable(); //old
-		CreateFrequencyTables(); //new
+		//create frequency tables and populate with values
+		CreateFrequencyTables();
+
+		//initialize default gain and drawbars
+
+		//master gain
+		mGain = 0.5;
+
+		//drawbars
+		float drawbars[9];
+
+		drawbars[0] = 1.0;
+		drawbars[1] = 1.0;
+		drawbars[2] = 1.0;
+		drawbars[3] = 0.0;
+		drawbars[4] = 0.0;
+		drawbars[5] = 0.0;
+		drawbars[6] = 0.0;
+		drawbars[7] = 0.0;
+		drawbars[8] = 0.0;
+
+		// apply to voices
+		for (int v = 0; v < MAX_VOICES; ++v)
+			for (int o = 0; o < 9; ++o)
+				voices[v].levels[o] = drawbars[o];
 
 		return kResultOk;
 	}
@@ -86,8 +115,6 @@ namespace OrganPlugin {
 	//------------------------------------------------------------------------
 	tresult PLUGIN_API vst_organProcessor::process(Vst::ProcessData& data)
 	{
-		//osc1.setFrequency(1000);
-		//osc1.setFrequency(500);
 		//--- First : Read inputs parameter changes-----------
 		if (data.inputParameterChanges)
 		{
@@ -110,9 +137,9 @@ namespace OrganPlugin {
 						//gain
 					case GainParams::kParamGainId:
 						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
-							mGain = value;
 
-							//master gain
+							//master gain				
+							mGain = value;
 						}
 						break;
 
@@ -208,8 +235,6 @@ namespace OrganPlugin {
 		Vst::IEventList* eventList = data.inputEvents;
 		if (eventList)
 		{
-
-
 			int32 numEvent = eventList->getEventCount();
 			for (int32 i = 0; i < numEvent; i++)
 			{
@@ -253,7 +278,7 @@ namespace OrganPlugin {
 
 						//voice off
 						voices[assignedVoice].NoteOff(); //new
-						OutputDebugStringA(("NoteOn received - noteId = " + std::to_string(pitch) + "\n").c_str());
+						OutputDebugStringA(("NoteOff received - noteId = " + std::to_string(pitch) + "\n").c_str());
 						break;
 					}
 					}

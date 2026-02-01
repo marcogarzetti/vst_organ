@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-// Copyright(c) 2025 My Plug-in Company.
+// Copyright(c) 2025 Marco Garzetti.
 //------------------------------------------------------------------------
 
 #include "controller.h"
@@ -28,29 +28,18 @@ namespace OrganPlugin {
 
 		// Here you could register some parameters
 			//---Create Parameters------------
-		parameters.addParameter(STR16("Gain"), STR16("dB"), 0, .5, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamGainId, 0);
+		parameters.addParameter(STR16("Gain"), STR16("dB"), 0, .5, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamGainId, 0); //default 0.5
 
 		//parameters for harmonics control
-		parameters.addParameter(STR16("16'"), STR16("dB"), 0, 1, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc1Id, 0);
-		parameters.addParameter(STR16("5 1/3'"), STR16("dB"), 0, 1, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc2Id, 0);
-		parameters.addParameter(STR16("8'"), STR16("dB"), 0, 1, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc3Id, 0);
-		parameters.addParameter(STR16("4'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc4Id, 0);
-		parameters.addParameter(STR16("2 2/3'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc5Id, 0);
-		parameters.addParameter(STR16("2'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc6Id, 0);
-		parameters.addParameter(STR16("1 3/5'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc7Id, 0);
-		parameters.addParameter(STR16("1 1/3'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc8Id, 0);
-		parameters.addParameter(STR16("1'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc9Id, 0);
-
-		//read default parameters
-
-		//voices
-	//for each voice
-		//for (int v = 0; v < MAX_VOICES; v++) {
-
-		//	auto* param = parameters.getParameter(kParamOsc1Id);
-
-		//	voices[v].levels[0] = GainParams::kParamOsc1Id; //set the oscillator level reading the current parameter value
-		//}
+		parameters.addParameter(STR16("16'"), STR16("dB"), 0, 1, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc1Id, 0); //default 1
+		parameters.addParameter(STR16("5 1/3'"), STR16("dB"), 0, 1, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc2Id, 0); //default 1
+		parameters.addParameter(STR16("8'"), STR16("dB"), 0, 1, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc3Id, 0); //default 1
+		parameters.addParameter(STR16("4'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc4Id, 0); //default 0
+		parameters.addParameter(STR16("2 2/3'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc5Id, 0); //default 0
+		parameters.addParameter(STR16("2'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc6Id, 0); //default 0
+		parameters.addParameter(STR16("1 3/5'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc7Id, 0); //default 0
+		parameters.addParameter(STR16("1 1/3'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc8Id, 0); //default 0
+		parameters.addParameter(STR16("1'"), STR16("dB"), 0, 0, Steinberg::Vst::ParameterInfo::kCanAutomate, GainParams::kParamOsc9Id, 0); //default 0
 
 		return result;
 	}

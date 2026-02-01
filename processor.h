@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-// Copyright(c) 2025 My Plug-in Company.
+// Copyright(c) 2025 Marco Garzetti.
 //------------------------------------------------------------------------
 
 #pragma once
@@ -23,7 +23,7 @@ namespace OrganPlugin {
 		vst_organProcessor();
 		~vst_organProcessor() SMTG_OVERRIDE;
 
-		//declare frequency tables and oscillators
+		//declare frequency tables and voices
 	public:
 		Voice voices[MAX_VOICES];
 		float notes[128];

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-// Copyright(c) 2025 My Plug-in Company.
+// Copyright(c) 2025 Marco Garzetti.
 //------------------------------------------------------------------------
 
 #pragma once
@@ -15,6 +15,6 @@
 #else
 #define stringFileDescription	"vst-organ VST3"
 #endif
-#define stringCompanyName		"My Plug-in Company\0"
-#define stringLegalCopyright	"Copyright(c) 2025 My Plug-in Company."
+#define stringCompanyName		"Marco Garzetti\0"
+#define stringLegalCopyright	"Copyright(c) 2025 Marco Garzetti."
 #define stringLegalTrademarks	"VST is a trademark of Steinberg Media Technologies GmbH"

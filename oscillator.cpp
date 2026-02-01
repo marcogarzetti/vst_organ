@@ -1,3 +1,7 @@
+//------------------------------------------------------------------------
+// Copyright(c) 2025 Marco Garzetti.
+//------------------------------------------------------------------------
+
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <iostream>
@@ -12,8 +16,9 @@ namespace OrganPlugin {
 		sampleRate = sr; OutputDebugStringA(("OScillator set sample rate " + std::to_string(sr) + "\n").c_str());
 	}
 	void Oscillator::setFrequency(double freq) {
-		OutputDebugStringA(("OScillator set frequency " + std::to_string(freq) + "\n").c_str());
-		frequency = freq; increment = (2.0 * PI * frequency) / sampleRate;
+		OutputDebugStringA(("Oscillator set frequency " + std::to_string(freq) + "\n").c_str());
+		frequency = freq; 
+		increment = (2.0 * PI * frequency) / sampleRate;
 	}
 
 	void Oscillator::reset() {
