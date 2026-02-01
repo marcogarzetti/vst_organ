@@ -16,31 +16,20 @@
 
 
 
-//#include "oscillator.h"
+//| Situation		 | How you receive parameters              |
+//| -------------- - | -------------------------------------- -|
+//| User moves knob  | `process()` via `inputParameterChanges` |
+//| Plugin loads	 | **`setState()`**						   |
+//| Preset loads	 | **`setState()`**						   |
+//| Project reopens  | **`setState()`**						   |
+
 
 using namespace Steinberg;
 
-namespace MyCompanyName {
+namespace OrganPlugin {
 	//------------------------------------------------------------------------
 	// vst_organProcessor
 	//------------------------------------------------------------------------
-
-	//Oscillator osc1;
-	//float freqTable[128];
-	//float vst_organProcessor::freqTable[128];
-	//Oscillator vst_organProcessor::osc1;
-
-	//void vst_organProcessor::CreateFrequencyTable()
-	//{
-	//	float c0 = 16.35;
-	//	float k = 1.059463094359;
-
-	//	for (int i = 0;i < 128;i++)
-	//	{
-	//		vst_organProcessor::freqTable[i] = c0;
-	//		c0 *= k;
-	//	}
-	//}
 
 	vst_organProcessor::vst_organProcessor()
 	{
@@ -78,9 +67,31 @@ namespace MyCompanyName {
 		/* If you don't need an event bus, you can remove the next line */
 		addEventInput(STR16("Event In"), 1);
 
-		//CreateFrequencyTable(); //old
-		CreateFrequencyTables(); //new
+		//create frequency tables and populate with values
+		CreateFrequencyTables();
 
+		//initialize default gain and drawbars
+
+		//master gain
+		mGain = 0.5;
+
+		//drawbars
+		float drawbars[9];
+
+		drawbars[0] = 1.0;
+		drawbars[1] = 1.0;
+		drawbars[2] = 1.0;
+		drawbars[3] = 0.0;
+		drawbars[4] = 0.0;
+		drawbars[5] = 0.0;
+		drawbars[6] = 0.0;
+		drawbars[7] = 0.0;
+		drawbars[8] = 0.0;
+
+		// apply to voices
+		for (int v = 0; v < MAX_VOICES; ++v)
+			for (int o = 0; o < 9; ++o)
+				voices[v].levels[o] = drawbars[o];
 
 		return kResultOk;
 	}
@@ -104,8 +115,6 @@ namespace MyCompanyName {
 	//------------------------------------------------------------------------
 	tresult PLUGIN_API vst_organProcessor::process(Vst::ProcessData& data)
 	{
-		//osc1.setFrequency(1000);
-		//osc1.setFrequency(500);
 		//--- First : Read inputs parameter changes-----------
 		if (data.inputParameterChanges)
 		{
@@ -128,11 +137,13 @@ namespace MyCompanyName {
 						//gain
 					case GainParams::kParamGainId:
 						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
-							mGain = value;
 
-							//master gain
+							//master gain				
+							mGain = value;
 						}
 						break;
+
+						//gains for harmonics (oscillators) of the voices
 					case GainParams::kParamOsc1Id:
 						if (paramQueue->getPoint(numPoints - 1, sampleOffset, value) == kResultTrue) {
 
@@ -219,15 +230,11 @@ namespace MyCompanyName {
 			}
 		}
 
-		// ....
-
 		//---Second: Read input events-------------
 		// get the list of all event changes
 		Vst::IEventList* eventList = data.inputEvents;
 		if (eventList)
 		{
-
-
 			int32 numEvent = eventList->getEventCount();
 			for (int32 i = 0; i < numEvent; i++)
 			{
@@ -243,7 +250,6 @@ namespace MyCompanyName {
 						//mGainReduction = event.noteOn.velocity; // value between 0 and 1
 					{
 						int32 pitch = event.noteOn.pitch;
-						//osc1.setFrequency(freqTable[pitch]); //old
 
 						int freeVoice = GetFirstAvailableVoice();
 						OutputDebugStringA(("First available voice: " + std::to_string(freeVoice) + "\n").c_str());
@@ -265,26 +271,20 @@ namespace MyCompanyName {
 					//----------------------
 					case Vst::Event::kNoteOffEvent:
 					{
-						// noteOff reset the gain modifier
-	//mGainReduction = 0.f;
-	//outputs[0][i] = 0;
 						int32 pitch = event.noteOn.pitch;
-						//osc1.setFrequency(0); //old
 
 						//get the voice assigned to the note
 						int assignedVoice = notes[pitch];
 
 						//voice off
 						voices[assignedVoice].NoteOff(); //new
-						OutputDebugStringA(("NoteOn received - noteId = " + std::to_string(pitch) + "\n").c_str());
+						OutputDebugStringA(("NoteOff received - noteId = " + std::to_string(pitch) + "\n").c_str());
 						break;
 					}
-
 					}
 				}
 			}
 		}
-
 
 		//--- Here you have to implement your processing
 		//oscillator 1 play
@@ -295,17 +295,14 @@ namespace MyCompanyName {
 
 			//output oscillator samples
 			for (int i = 0; i < numSamples; i++) {
-				//float sample = osc1.process();
-				//outputs[0][i] = sample*0.5;   // left
-				////	//outputs[1][i] = sample;   // right
 				float sample = 0;
 
 				//sum the samples of the voices
 				for (int i = 0; i < MAX_VOICES; i++) {
 					sample += voices[i].GetSample();
 				}
-				outputs[0][i] = sample* mGain; // left
-				outputs[1][i] = sample* mGain; // right
+				outputs[0][i] = sample * mGain; // left
+				outputs[1][i] = sample * mGain; // right
 			}
 		}
 
@@ -324,6 +321,10 @@ namespace MyCompanyName {
 	//------------------------------------------------------------------------
 	tresult PLUGIN_API vst_organProcessor::setupProcessing(Vst::ProcessSetup& newSetup)
 	{
+		//get sample frequency from host and set voices sample rate. If the sample rate is changed in the host this cycle will be executed to set the new sample rate for the voices
+		for (int i = 0; i < MAX_VOICES; i++) {
+			voices[i].SetSampleRate(newSetup.sampleRate);
+		}
 		//--- called before any processing ----
 		return AudioEffect::setupProcessing(newSetup);
 	}
@@ -362,6 +363,4 @@ namespace MyCompanyName {
 
 	//------------------------------------------------------------------------
 
-
-
-} // namespace MyCompanyName
+} // namespace OrganPlugin

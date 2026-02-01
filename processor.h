@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-// Copyright(c) 2025 My Plug-in Company.
+// Copyright(c) 2025 Marco Garzetti.
 //------------------------------------------------------------------------
 
 #pragma once
@@ -10,9 +10,9 @@
 #include "oscillator.h"
 #include "voice.h"
 
-static constexpr int MAX_VOICES = 8;
+static constexpr int MAX_VOICES = 8; //max number of allowed voices
 
-namespace MyCompanyName {
+namespace OrganPlugin {
 
 	//------------------------------------------------------------------------
 	//  vst_organProcessor
@@ -23,10 +23,8 @@ namespace MyCompanyName {
 		vst_organProcessor();
 		~vst_organProcessor() SMTG_OVERRIDE;
 
-		//declare frequency tables and oscillators
+		//declare frequency tables and voices
 	public:
-		static float freqTable[128]; //old
-		static Oscillator osc1; //old
 		Voice voices[MAX_VOICES];
 		float notes[128];
 
@@ -34,9 +32,8 @@ namespace MyCompanyName {
 	public:
 		Steinberg::Vst::ParamValue mGain = 1.;
 
+		//method to return the first free usable voice
 		int GetFirstAvailableVoice();
-
-		//static void CreateFrequencyTable();
 
 		// Create function
 		static Steinberg::FUnknown* createInstance(void* /*context*/)
@@ -74,4 +71,4 @@ namespace MyCompanyName {
 	};
 
 	//------------------------------------------------------------------------
-} // namespace MyCompanyName
+} // namespace OrganPlugin
