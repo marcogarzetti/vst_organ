@@ -26,7 +26,6 @@ namespace OrganPlugin {
 		//declare frequency tables and voices
 	public:
 		Voice voices[MAX_VOICES];
-		float notes[128];
 
 		//declare parameters
 	public:
@@ -34,6 +33,9 @@ namespace OrganPlugin {
 
 		//method to return the first free usable voice
 		int GetFirstAvailableVoice();
+
+		//method to return the voice assigned to a note
+		int GetVoiceAssignedToNote(int noteNumber);
 
 		// Create function
 		static Steinberg::FUnknown* createInstance(void* /*context*/)

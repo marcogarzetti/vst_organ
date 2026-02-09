@@ -249,36 +249,34 @@ namespace OrganPlugin {
 						// use the velocity as gain modifier: a velocity max (1) will lead to silent audio
 						//mGainReduction = event.noteOn.velocity; // value between 0 and 1
 					{
-						int32 pitch = event.noteOn.pitch;
+						int32 noteNumber = event.noteOn.pitch;
 
+						//get the first available voice (not assigned to a note)
 						int freeVoice = GetFirstAvailableVoice();
 						OutputDebugStringA(("First available voice: " + std::to_string(freeVoice) + "\n").c_str());
 
-						//assign the free voice to the note
-						notes[pitch] = freeVoice;
-
-						//get the voice assigned to the note
-						int assignedVoice = notes[pitch];
-
 						//voice on
-						voices[assignedVoice].NoteOn(pitch); //new
-						OutputDebugStringA(("NoteOn received - noteId = " + std::to_string(pitch) + "\n").c_str());
+						voices[freeVoice].NoteOn(noteNumber);
+						OutputDebugStringA(("NoteOn received - noteId = " + std::to_string(noteNumber) + "assigned voice: " + std::to_string(freeVoice) + "\n").c_str());
 
 						break;
 					}
 
-
 					//----------------------
 					case Vst::Event::kNoteOffEvent:
 					{
-						int32 pitch = event.noteOn.pitch;
+						int32 noteNumber = event.noteOn.pitch;
 
 						//get the voice assigned to the note
-						int assignedVoice = notes[pitch];
+						int assignedVoice = GetVoiceAssignedToNote(noteNumber);
 
 						//voice off
-						voices[assignedVoice].NoteOff(); //new
-						OutputDebugStringA(("NoteOff received - noteId = " + std::to_string(pitch) + "\n").c_str());
+						if (assignedVoice >= 0) //if a voice is assigned to the note
+						{
+							voices[assignedVoice].NoteOff();
+						}
+
+						OutputDebugStringA(("NoteOff received - noteId = " + std::to_string(noteNumber) + "assigned voice: " + std::to_string(assignedVoice) + "\n").c_str());
 						break;
 					}
 					}
@@ -312,6 +310,15 @@ namespace OrganPlugin {
 	int vst_organProcessor::GetFirstAvailableVoice() {
 		for (int i = 0; i < MAX_VOICES; i++) {
 			if (!voices[i].active) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	int vst_organProcessor::GetVoiceAssignedToNote(int noteNumber) {
+		for (int i = 0; i < MAX_VOICES; i++) {
+			if (voices[i].noteNumber == noteNumber) {
 				return i;
 			}
 		}
