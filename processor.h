@@ -35,7 +35,7 @@ namespace OrganPlugin {
 		int GetFirstAvailableVoice();
 
 		//method to return the voice assigned to a note
-		int GetVoiceAssignedToNote(int noteNumber);
+		int GetVoicesAssignedToNote(int noteNumber, int* outIndices);
 
 		// Create function
 		static Steinberg::FUnknown* createInstance(void* /*context*/)

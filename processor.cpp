@@ -267,16 +267,22 @@ namespace OrganPlugin {
 					{
 						int32 noteNumber = event.noteOn.pitch;
 
+						OutputDebugStringA(("NoteOff received - noteId = " + std::to_string(noteNumber) + "\n").c_str());
+
 						//get the voice assigned to the note
-						int assignedVoice = GetVoiceAssignedToNote(noteNumber);
+						int voicesAssignedToNote[MAX_VOICES];
+						int count = GetVoicesAssignedToNote(noteNumber, voicesAssignedToNote);
 
-						//voice off
-						if (assignedVoice >= 0) //if a voice is assigned to the note
-						{
-							voices[assignedVoice].NoteOff();
+						//send note off to all the voices assigned to the note
+						for (int i = 0; i < count; i++) {
+							int voiceNumber = voicesAssignedToNote[i];
+
+							//voice off
+							if (voiceNumber >= 0) //if a voice is assigned to the note
+							{
+								voices[voiceNumber].NoteOff();
+							}
 						}
-
-						OutputDebugStringA(("NoteOff received - noteId = " + std::to_string(noteNumber) + "assigned voice: " + std::to_string(assignedVoice) + "\n").c_str());
 						break;
 					}
 					}
@@ -316,13 +322,17 @@ namespace OrganPlugin {
 		return -1;
 	}
 
-	int vst_organProcessor::GetVoiceAssignedToNote(int noteNumber) {
-		for (int i = 0; i < MAX_VOICES; i++) {
+	int vst_organProcessor::GetVoicesAssignedToNote(int noteNumber, int* outIndices)
+	{
+		int count = 0;
+
+		for (int i = 0; i < MAX_VOICES && count < MAX_VOICES; i++) {
 			if (voices[i].noteNumber == noteNumber) {
-				return i;
+				outIndices[count++] = i;
 			}
 		}
-		return -1;
+
+		return count; //number of voices found
 	}
 
 	//------------------------------------------------------------------------
